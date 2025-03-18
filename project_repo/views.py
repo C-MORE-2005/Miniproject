@@ -11,38 +11,25 @@ from .forms import LoginForm, TeacherRegistrationForm, StudentRegistrationForm
 
 # Login View
 def login_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            
-            # Try to authenticate as Teacher
-            try:
-                user = Teacher.objects.get(email=email)
-                if user.password == password:  # ❌ Replace this with password hashing later!
-                    request.session['user_id'] = user.id
-                    request.session['user_type'] = 'teacher'
-                    return redirect('teacher_dashboard')
-            except Teacher.DoesNotExist:
-                pass
-                
-            # Try to authenticate as Student
-            try:
-                user = Student.objects.get(email=email)
-                if user.password == password:  # ❌ Replace this with password hashing later!
-                    request.session['user_id'] = user.id
-                    request.session['user_type'] = 'student'
-                    return redirect('student_dashboard')
-            except Student.DoesNotExist:
-                pass
-                
-            messages.error(request, 'Invalid email or password')
+        if form.is_valid():  # This automatically validates the captcha
+            email = form.cleaned_data.get("email")
+            password = form.cleaned_data.get("password")
+
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("home")
+            else:
+                messages.error(request, "Invalid email or password.")
+        else:
+            messages.error(request, "Invalid captcha. Please try again.")
+    
     else:
         form = LoginForm()
-    
-    return render(request, 'login.html', {'form': form})
 
+    return render(request, "login.html", {"form": form})
 
 # Choose Role View
 def choose_role(request):
