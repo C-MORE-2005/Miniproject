@@ -1,18 +1,26 @@
 from django.urls import path
-from .views import register, teacher_register
-from .views import login_view, teacher_register, verify_email, forgot_password_view, reset_password_view, choose_role
-from .views import register, teacher_register, choose_role 
 from django.shortcuts import redirect
+from .views import reset_password_confirm_view  
+from .views import forgot_password_view
+from .views import (
+    register, 
+    teacher_register, 
+    login_view, 
+    forgot_password_view, 
+    reset_password_view, 
+    choose_role, 
+    verify_email
+)
+
 urlpatterns = [
     path('', lambda request: redirect('login/')),
     path('login/', login_view, name='login'),
     path('student_register/', register, name='register'),
-  # Make sure this matches the name used in the template
     path('teacher-register/', teacher_register, name='teacher_register'),
-    
     path('forgot-password/', forgot_password_view, name='forgot_password'),
-    # Use only one reset password URL that expects both user_type and token:
-    path('reset-password/<str:user_type>/<str:token>/', reset_password_view, name='reset_password'),
+    path("reset_password/", reset_password_view, name="reset_password"),
     path('choose-role/', choose_role, name='choose_role'),
     path('verify-email/', verify_email, name='verify_email'),
+    path('reset/<uidb64>/<token>/', reset_password_confirm_view, name='password_reset_confirm'),
 ]
+

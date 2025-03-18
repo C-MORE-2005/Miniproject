@@ -5,6 +5,29 @@
   <meta charset="UTF-8">
   <title>Login</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .bottom-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px; /* Adds spacing between the buttons */
+      margin-top: 15px;
+    }
+    .bottom-buttons a {
+      text-decoration: none;
+    }
+    .blue-button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .blue-button:hover {
+      background: #0056b3;
+    }
+  </style>
 </head>
 <body>
   <div class="main-container">
@@ -37,19 +60,17 @@
           <a href="{% url 'forgot_password' %}">
             <button type="button" class="blue-button">Forgot Password?</button>
           </a>
-          <a href="{% url 'verify_email' %}">
-            <button type="button" class="blue-button">Verify Email</button>
-          </a>
         </div>
       </form>
     </div>
   </div>
+  
   {% if messages %}
-  {% for message in messages %}
-    <script>
-      alert("Enter Correct Captcha");  // Show alert for the message
-    </script>
-  {% endfor %}
-{% endif %}
+    {% for message in messages %}
+      <script>
+        alert("Enter Correct Captcha");  // Show alert for the message
+      </script>
+    {% endfor %}
+  {% endif %}
 </body>
 </html>
