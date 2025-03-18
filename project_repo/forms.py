@@ -10,7 +10,7 @@ class LoginForm(forms.Form):
 class TeacherRegistrationForm(forms.ModelForm):
     class Meta:
         model = Teacher
-        fields = ['institute', 'name', 'email', 'mobile', 'gender', 'branch', 'teacher_id', 'id_card']
+        fields = ['institute', 'name', 'email', 'mobile', 'gender', 'branch', 'teacher_id', 'id_card','password']
 
 class StudentRegistrationForm(forms.ModelForm):
     class Meta:

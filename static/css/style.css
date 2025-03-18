@@ -1,92 +1,140 @@
-/* style.css */
-
 /* 1) Center the entire page using Flexbox */
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
-  
-  body {
-    display: flex;
-    align-items: center;      /* Vertically center */
-    justify-content: center;  /* Horizontally center */
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* 2) Main container holding the title and info sections */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  overflow: auto;
+  display: flex;
+  align-items: center;      /* Vertically center */
+  justify-content: center;  /* Horizontally center */
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+
+/* 2) Main container holding the title and info sections */
+.main-container {
+  max-height: none;
+  width: 600px;             /* Adjust as desired */
+  text-align: center;
+}
+
+/* 3) Brown rectangle for the title */
+.title-container {
+  background-color: brown;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 20px;
+  border-radius: 8px 8px 0 0; /* Rounded corners at the top */
+}
+
+/* 4) White rectangle with box shadow for form fields */
+.info-container {
+  background-color: #fff;
+  border-radius: 0 0 8px 8px; /* Rounded corners at the bottom */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  text-align: left;
+}
+
+/* 5) Spacing between each field */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+/* Labels */
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Required * symbol */
+label span {
+  color: red;
+  font-size: 18px;
+}
+
+/* Input fields */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Gender selection */
+.gender-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.gender-group input {
+  transform: scale(1.2); /* Increase size of radio button */
+  margin-right: 5px;
+}
+
+/* File upload field */
+input[type="file"] {
+  border: none;
+  font-size: 14px;
+}
+
+/* 6) Blue buttons */
+.blue-button {
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.blue-button:hover {
+  background-color: #0056b3;
+}
+
+/* 7) Layout for bottom row of buttons */
+.bottom-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Make the button span full width */
+.login-btn {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Responsive design for mobile screens */
+@media (max-width: 600px) {
   .main-container {
-    width: 600px;             /* Adjust as desired */
-    text-align: center;
+      width: 90%;
   }
-  
-  /* 3) Brown rectangle for the "Login" title */
-  .title-container {
-    background-color: brown;
-    color: #fff;
-    font-size: 24px;
-    font-weight: bold;
-    padding: 20px;
-    border-radius: 8px 8px 0 0; /* Rounded corners at the top */
+
+  .gender-group {
+      flex-direction: column;
+      align-items: flex-start;
   }
-  
-  /* 4) White rectangle with box shadow for form fields */
-  .info-container {
-    background-color: #fff;
-    border-radius: 0 0 8px 8px; /* Rounded corners at the bottom */
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    padding: 30px;
-  }
-  
-  /* 5) Spacing between each field (label + input) */
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;  /* Left-align labels & inputs */
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    font-weight: bold;
-    margin-bottom: 6px;
-    font-size: 16px;
-    color: #333;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  /* 6) Blue buttons (Login, Registration, etc.) */
-  .blue-button {
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    font-size: 16px;
-    padding: 12px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 10px 0; /* Space between the Login button & others */
-  }
-  
-  .blue-button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* 7) Layout for bottom row of buttons */
-  .bottom-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .login-btn {
-    width: 100%;  /* Make the Login button span the container's width */
-    margin-top: 20px;
-  }
-  
+}
+
+html, body {
+  height: auto; /* Allow page to expand */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
