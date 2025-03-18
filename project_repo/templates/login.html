@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <div class="main-container">
+    <div class="title-container">Login</div>
+    <div class="info-container">
+      <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label>Email id of Team Leader / Founder</label>
+          {{ form.email }}
+        </div>
+
+        <div class="form-group">
+          <label>Enter Password</label>
+          {{ form.password }}
+        </div>
+
+        <div class="form-group">
+          <label>Captcha</label>
+          {{ form.captcha }}
+        </div>
+      
+        <button type="submit" class="blue-button login-btn">Login</button>
+        
+        <div class="bottom-buttons">
+          <a href="{% url 'choose_role' %}">
+            <button type="button" class="blue-button">Register</button>
+          </a>
+          <a href="{% url 'forgot_password' %}">
+            <button type="button" class="blue-button">Forgot Password?</button>
+          </a>
+          <a href="{% url 'verify_email' %}">
+            <button type="button" class="blue-button">Verify Email</button>
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

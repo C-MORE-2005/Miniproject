@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Role</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f8f8f8;
+        }
+        .role-container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .role-title {
+            background-color: red;
+            color: white;
+            font-size: 32px; /* Increased text size */
+            font-weight: bold;
+            padding: 15px 0;
+            border-radius: 5px;
+            width: 550px; /* Increased width */
+            margin-bottom: 25px; /* Added more space below the title */
+        }
+        .role-selection {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* Added spacing between images */
+        }
+        .role-option {
+            text-align: center;
+            width: 50%;
+        }
+        .role-option img {
+            width: 260px; /* Slightly bigger images */
+            height: 260px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .role-option img:hover {
+            transform: scale(1.05);
+        }
+        .role-text {
+            font-size: 26px; /* Increased text size */
+            font-weight: bold;
+            margin-top: 20px; /* More space between image and text */
+        }
+    </style>
+</head>
+<body>
+    <div class="role-container">
+        <div class="role-title">Select Your Role</div>
+
+        <div class="role-selection">
+            <!-- Professor -->
+            <div class="role-option">
+                <a href="{% url 'teacher_register' %}">
+
+                    <img src="{% static 'images/teacher.png' %}" alt="Professor">
+                </a>
+                <div class="role-text">Professor</div>
+            </div>
+
+            <!-- Student -->
+            <div class="role-option">
+                <a href="{% url 'registration' %}"> <!-- Ensure this matches the URL name in urls.py -->
+                    <img src="{% static 'images/stud.png' %}" alt="Student" class="role-image">
+                </a>
+                
+                <div class="role-text">Student</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
