@@ -126,7 +126,7 @@ STATIC_URL = '/static/'
 
 # Set the correct static directory path
 STATICFILES_DIRS = [
-    r"C:\Users\chinm\OneDrive\Desktop\Miniproject\static",
+    os.path.join(BASE_DIR, "static"),
 ]
 
 
