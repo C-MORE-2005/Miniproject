@@ -1,5 +1,6 @@
 from django.urls import path
 from django.shortcuts import redirect
+from .views import reset_password_view
 from .views import reset_password_confirm_view  
 from .views import forgot_password_view
 from .views import (

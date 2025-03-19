@@ -5,7 +5,7 @@ from captcha.fields import CaptchaField
 class LoginForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Please Enter Team Lead Email / Founder'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Please Enter Your Password'}))
-    captcha = CaptchaField()  # This adds the CAPTCHA field
+    captcha = CaptchaField(error_messages={'invalid': "Incorrect CAPTCHA! Try again."})  # This adds the CAPTCHA field
 
 class TeacherRegistrationForm(forms.ModelForm):
     class Meta:
