@@ -2,16 +2,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <title>Idea Submission</title>
     <style>
         body {
-            background-color: #b0c4de;
+            background-color: #f8f9fa;
             font-family: Arial, sans-serif;
             padding: 20px;
         }
         .container {
-            width: 80%;
+            width: 50%;
             margin: auto;
             background: white;
             padding: 20px;
@@ -19,7 +20,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
         h1 {
-            background: #ff6680;
+            background: #343a40;
             color: white;
             padding: 15px;
             text-align: center;
@@ -32,35 +33,57 @@
             font-weight: bold;
             display: block;
             margin-bottom: 5px;
+            font-size: 24px;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin-top: 5px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            font-size: 24px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .radio-group input {
+            transform: scale(1.8);
+            margin-right: 8px;
         }
         .btn {
-            background: #ff6680;
+            background: #007bff;
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 15px 20px;
             border-radius: 5px;
             cursor: pointer;
             display: block;
-            width: 200px;
+            width: 250px;
             text-align: center;
             margin: auto;
+            font-size: 18px;
         }
         .btn:hover {
-            background: #ff3355;
+            background: #0056b3;
+            #0056b3;
         }
     </style>
+    
+
     <script>
         function generateTeamFields() {
             let count = document.getElementById('team-count').value;
             let container = document.getElementById('team-members');
-            container.innerHTML = ""; // Clear previous inputs
+            let idContainer = document.getElementById('id-card-uploads');
+            container.innerHTML = "";
+            idContainer.innerHTML = "";
 
             for (let i = 1; i <= count; i++) {
                 let div = document.createElement("div");
@@ -72,6 +95,14 @@
                     <input type="email" name="team_member_${i}_email" required>
                 `;
                 container.appendChild(div);
+
+                let idDiv = document.createElement("div");
+                idDiv.classList.add("form-group");
+                idDiv.innerHTML = `
+                    <label>Upload ID Card for Team Member ${i} (JPG, PNG, PDF max 2MB)</label>
+                    <input type="file" name="id_card_${i}" accept=".jpg, .png, .pdf" required>
+                `;
+                idContainer.appendChild(idDiv);
             }
         }
     </script>
@@ -80,95 +111,118 @@
     <div class="container">
         <h1>Select and Add Idea and Innovation</h1>
 
-        <div class="form-group">
-            <label>Develop as part of</label>
-            <input type="text" name="develop_as_part" required>
-        </div>
+        <!-- Display Success & Error Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="messages {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
-        <div class="form-group">
-            <label>Title of Project</label>
-            <input type="text" name="title" required>
-        </div>
+        <form action="{% url 'idea_form' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-        <div class="form-group">
-            <label>Academic Year</label>
-            <input type="text" name="academic_year" required>
-        </div>
-
-        <div class="form-group">
-            <label for="domain">Domain</label>
-            <select id="domain" name="domain" required>
-                <option value="">Select a Domain</option>
-                <option value="IOT">IoT</option>
-                <option value="website">Website</option>
-                <option value="app">App Development</option>
-                <option value="aiml">AI/ML</option>
-                <option value="aids">AIDS (Artificial Intelligence & Data Science)</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Innovation Type</label>
-            <input type="text" name="innovation_type" required>
-        </div>
-
-        <div class="form-group">
-            <label>Define the Problem</label>
-            <textarea name="problem" rows="3" required></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Describe the Solution</label>
-            <textarea name="solution" rows="3" required></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Unique Features</label>
-            <textarea name="features" rows="3" required></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Status Level</label>
-            <div>
-                <input type="radio" id="status1" name="status_level" value="1" required>
-                <label for="status1">1</label>
-
-                <input type="radio" id="status2" name="status_level" value="2">
-                <label for="status2">2</label>
-
-                <input type="radio" id="status3" name="status_level" value="3">
-                <label for="status3">3</label>
+            <div class="form-group">
+                <label>Title of Project</label>
+                <input type="text" name="title" required>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label>How is it Different?</label>
-            <textarea name="difference" rows="3" required></textarea>
-        </div>
+            <div class="form-group">
+                <label>Develop as part of</label>
+                <select name="develop_as_part" required>
+                    <option value="">Select an option</option>
+                    <option value="academic">Academic Requirement/Study Project</option>
+                    <option value="research">Academic Research Assignment/Industry Sponsored Project</option>
+                    <option value="independent">Independent Assignment/Non-academic Study Project</option>
+                    <option value="hackathon">Develop as Hackathon Project</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label>Video URL</label>
-            <input type="url" name="video_url">
-        </div>
 
-        <div class="form-group">
-            <label>Upload Photograph (JPG, PNG, PDF max 2MB)</label>
-            <input type="file" name="upload" accept=".jpg, .png, .pdf">
-        </div>
+            <div class="form-group">
+                <label>Academic Year</label>
+                <input type="text" name="academic_year" required>
+            </div>
 
-        <div class="form-group">
-            <label>Mentor Name</label>
-            <input type="text" name="mentor" required>
-        </div>
+            <div class="form-group">
+                <label for="domain">Domain</label>
+                <select id="domain" name="domain" required>
+                    <option value="">Select a Domain</option>
+                    <option value="IOT">IoT</option>
+                    <option value="website">Website</option>
+                    <option value="app">App Development</option>
+                    <option value="aiml">AI/ML</option>
+                    <option value="aids">AIDS (Artificial Intelligence & Data Science)</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label>Number of Team Members</label>
-            <input type="number" id="team-count" name="team_count" min="1" max="10" required onchange="generateTeamFields()">
-        </div>
+            <div class="form-group">
+                <label>Innovation Type</label>
+                <input type="text" name="innovation_type" required>
+            </div>
 
-        <div id="team-members"></div>
+            <div class="form-group">
+                <label>Define the Problem</label>
+                <textarea name="problem" rows="3" required></textarea>
+            </div>
 
-        <button class="btn">Save and Next</button>
+            <div class="form-group">
+                <label>Describe the Solution</label>
+                <textarea name="solution" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Unique Features</label>
+                <textarea name="features" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Status Level</label>
+                <div>
+                    <input type="radio" id="status1" name="status_level" value="1" required>
+                    <label for="status1">1</label>
+
+                    <input type="radio" id="status2" name="status_level" value="2">
+                    <label for="status2">2</label>
+
+                    <input type="radio" id="status3" name="status_level" value="3">
+                    <label for="status3">3</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>How is it Different?</label>
+                <textarea name="difference" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Video URL</label>
+                <input type="url" name="video_url">
+            </div>
+
+            <div class="form-group">
+                <label>Upload Photograph (JPG, PNG, PDF max 2MB)</label>
+                <input type="file" name="upload" accept=".jpg, .png, .pdf">
+            </div>
+
+            <div class="form-group">
+                <label>Mentor Name</label>
+                <input type="text" name="mentor" required>
+            </div>
+
+            <div class="form-group">
+                <label>Number of Team Members</label>
+                <input type="number" id="team-count" name="team_count" min="1" max="10" required onchange="generateTeamFields()">
+            </div>
+
+            <div id="team-members"></div>
+
+            <!-- ID Card Upload Section -->
+            <div id="id-card-uploads"></div>
+
+            <button type="submit" class="btn">Save and Next</button>
+        </form>
     </div>
 </body>
 </html>
