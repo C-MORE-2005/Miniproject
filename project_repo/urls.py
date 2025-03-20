@@ -2,6 +2,7 @@ from django.urls import path
 from django.shortcuts import redirect
 from .views import reset_password_view
 from .views import reset_password_confirm_view  
+from .views import student_dashboard
 from .views import forgot_password_view
 from .views import (
     register, 
@@ -16,6 +17,7 @@ from .views import (
 urlpatterns = [
     path('', lambda request: redirect('login/')),
     path('login/', login_view, name='login'),
+    path("student_dashboard/", student_dashboard, name="student_dashboard"),
     path('student_register/', register, name='register'),
     path('teacher-register/', teacher_register, name='teacher_register'),
     path('forgot-password/', forgot_password_view, name='forgot_password'),

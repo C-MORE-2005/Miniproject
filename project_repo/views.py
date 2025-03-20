@@ -27,39 +27,28 @@ def login_view(request):
             entered_captcha = request.POST.get("captcha")
             session_captcha = request.session.get("captcha_value")  # Get stored CAPTCHA
 
-            # 1. Check if the CAPTCHA is correct
+            # Check if CAPTCHA is correct
             if entered_captcha != session_captcha:
-                messages.error(request, "Wrong CAPTCHA. Please enter again.")
+                messages.error(request, "Wrong CAPTCHA. Please try again.")
                 return render(request, 'login.html', {'form': form})
 
-            # 2. Check if the user exists in Teacher table
-            try:
-                user = Teacher.objects.get(email=email)
-                if check_password(password, user.password):  # Compare hashed passwords
-                    request.session['user_id'] = user.id
-                    request.session['user_type'] = 'teacher'
-                    return redirect('teacher_dashboard')
-                else:
-                    messages.error(request, "Incorrect password.")
-                    return render(request, 'login.html', {'form': form})
+            # Check if user exists in Teacher table
+            teacher = Teacher.objects.filter(email=email).first()
+            if teacher and check_password(password, teacher.password):
+                request.session['user_id'] = teacher.id
+                request.session['user_type'] = 'teacher'
+                return redirect('teacher_dashboard')
 
-            except Teacher.DoesNotExist:
-                pass  # Continue to check Student
+            # Check if user exists in Student table
+            student = Student.objects.filter(email=email).first()
+            if student and check_password(password, student.password):
+                request.session['user_id'] = student.id
+                request.session['user_type'] = 'student'
+                return redirect('student_dashboard')  # Change this if necessary
 
-            # 3. Check if the user exists in Student table
-            try:
-                user = Student.objects.get(email=email)
-                if check_password(password, user.password):  # Compare hashed passwords
-                    request.session['user_id'] = user.id
-                    request.session['user_type'] = 'student'
-                    return redirect('student_dashboard')
-                else:
-                    messages.error(request, "Incorrect password.")
-                    return render(request, 'login.html', {'form': form})
-
-            except Student.DoesNotExist:
-                messages.error(request, "User not found. Please register first.")
-                return render(request, 'login.html', {'form': form})
+            # If neither exists
+            messages.error(request, "Invalid email or password. Please try again.")
+            return render(request, 'login.html', {'form': form})
 
     else:
         form = LoginForm()
@@ -184,3 +173,7 @@ def verify_email(request):
 def reset_password_view(request):
     return HttpResponse("Reset password page under construction.")
 
+
+
+def student_dashboard(request):
+    return render(request, 'student_dashboard.html')
