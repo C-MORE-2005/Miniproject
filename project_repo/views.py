@@ -9,7 +9,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.urls import reverse
-from .models import Teacher, Student,Idea
+from .models import Teacher, Student
 from .forms import LoginForm, TeacherRegistrationForm, StudentRegistrationForm
 
 # Dictionary to store email verification codes
@@ -182,5 +182,4 @@ from django.shortcuts import render
 
 
 def idea_form(request):
-    teachers = Teacher.objects.all()  # Fetch all teachers
-    return render(request, "idea_form.html", {"teachers": teachers})
+    return render(request, "idea_form.html")
