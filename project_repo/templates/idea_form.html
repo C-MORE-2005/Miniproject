@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Idea Submission</title>
+    <style>
+        body {
+            background-color: #b0c4de;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            background: #ff6680;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .btn {
+            background: #ff6680;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 200px;
+            text-align: center;
+            margin: auto;
+        }
+        .btn:hover {
+            background: #ff3355;
+        }
+    </style>
+    <script>
+        function generateTeamFields() {
+            let count = document.getElementById('team-count').value;
+            let container = document.getElementById('team-members');
+            container.innerHTML = ""; // Clear previous inputs
+
+            for (let i = 1; i <= count; i++) {
+                let div = document.createElement("div");
+                div.classList.add("form-group");
+                div.innerHTML = `
+                    <label>Team Member ${i} Name:</label>
+                    <input type="text" name="team_member_${i}_name" required>
+                    <label>Team Member ${i} Email:</label>
+                    <input type="email" name="team_member_${i}_email" required>
+                `;
+                container.appendChild(div);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Select and Add Idea and Innovation</h1>
+
+        <div class="form-group">
+            <label>Develop as part of</label>
+            <input type="text" name="develop_as_part" required>
+        </div>
+
+        <div class="form-group">
+            <label>Title of Project</label>
+            <input type="text" name="title" required>
+        </div>
+
+        <div class="form-group">
+            <label>Academic Year</label>
+            <input type="text" name="academic_year" required>
+        </div>
+
+        <div class="form-group">
+            <label for="domain">Domain</label>
+            <select id="domain" name="domain" required>
+                <option value="">Select a Domain</option>
+                <option value="IOT">IoT</option>
+                <option value="website">Website</option>
+                <option value="app">App Development</option>
+                <option value="aiml">AI/ML</option>
+                <option value="aids">AIDS (Artificial Intelligence & Data Science)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Innovation Type</label>
+            <input type="text" name="innovation_type" required>
+        </div>
+
+        <div class="form-group">
+            <label>Define the Problem</label>
+            <textarea name="problem" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Describe the Solution</label>
+            <textarea name="solution" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Unique Features</label>
+            <textarea name="features" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Status Level</label>
+            <div>
+                <input type="radio" id="status1" name="status_level" value="1" required>
+                <label for="status1">1</label>
+
+                <input type="radio" id="status2" name="status_level" value="2">
+                <label for="status2">2</label>
+
+                <input type="radio" id="status3" name="status_level" value="3">
+                <label for="status3">3</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>How is it Different?</label>
+            <textarea name="difference" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Video URL</label>
+            <input type="url" name="video_url">
+        </div>
+
+        <div class="form-group">
+            <label>Upload Photograph (JPG, PNG, PDF max 2MB)</label>
+            <input type="file" name="upload" accept=".jpg, .png, .pdf">
+        </div>
+
+        <div class="form-group">
+            <label>Mentor Name</label>
+            <input type="text" name="mentor" required>
+        </div>
+
+        <div class="form-group">
+            <label>Number of Team Members</label>
+            <input type="number" id="team-count" name="team_count" min="1" max="10" required onchange="generateTeamFields()">
+        </div>
+
+        <div id="team-members"></div>
+
+        <button class="btn">Save and Next</button>
+    </div>
+</body>
+</html>

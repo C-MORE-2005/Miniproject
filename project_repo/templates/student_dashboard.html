@@ -17,20 +17,32 @@
         .button-container {
             display: flex;
             justify-content: center;
-            gap: 60px; /* More spacing */
+            gap: 100px; /* Increased spacing */
+            flex-wrap: wrap; /* Ensures responsiveness */
+        }
+        .button-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .image-button {
-            width: 180px; /* Increased size */
-            height: 180px;
-            border-radius: 15px;
+            width: 300px; /* Enlarged size */
+            height: 300px;
+            border-radius: 20px;
             border: none;
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
         }
         .image-button:hover {
-            transform: scale(1.15);
-            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+            transform: scale(1.2);
+            box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.5);
+        }
+        .button-title {
+            margin-top: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #222;
         }
     </style>
 </head>
@@ -38,15 +50,24 @@
     <div class="container">
         <h1>Welcome, Student!</h1>
         <div class="button-container">
-            <a href="#">
-                <img src="{% static 'images/idea.png' %}" alt="Idea" class="image-button">
-            </a>
-            <a href="#">
-                <img src="{% static 'images/prototype.png' %}" alt="Prototype" class="image-button">
-            </a>
-            <a href="#">
-                <img src="{% static 'images/startup.png' %}" alt="Start-Up" class="image-button">
-            </a>
+            <div class="button-item">
+                <a href="{% url 'idea_form' %}">
+                    <img src="{% static 'images/idea.png' %}" alt="Submit an Idea" class="image-button">
+                </a>           
+                <div class="button-title">IDEA</div>
+            </div>
+            <div class="button-item">
+                <a href="#">
+                    <img src="{% static 'images/prototype.png' %}" alt="Prototype" class="image-button">
+                </a>
+                <div class="button-title">PROTOTYPE</div>
+            </div>
+            <div class="button-item">
+                <a href="#">
+                    <img src="{% static 'images/startup.png' %}" alt="Start-Up" class="image-button">
+                </a>
+                <div class="button-title">START-UP</div>
+            </div>
         </div>
     </div>
 </body>
