@@ -24,7 +24,7 @@ body {
 
 /* 3) Brown rectangle for the title */
 .title-container {
-  background-color: brown;
+  background-color: #EA5158;
   color: #fff;
   font-size: 24px;
   font-weight: bold;
@@ -93,7 +93,7 @@ input[type="file"] {
 
 /* 6) Blue buttons */
 .blue-button {
-  background-color: #007BFF;
+  background-color: #587894;
   color: #fff;
   border: none;
   font-size: 16px;
@@ -105,7 +105,7 @@ input[type="file"] {
 }
 
 .blue-button:hover {
-  background-color: #0056b3;
+  background-color: #587894;
 }
 
 /* 7) Layout for bottom row of buttons */
@@ -147,4 +147,12 @@ html, body {
 }
 .image-button:hover {
   transform: scale(1.1); /* Slight zoom effect */
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
 }

@@ -145,8 +145,15 @@
             <input type="password" placeholder="Re-enter Password">
         </div>
 
-        <button class="register-btn">Register</button>
+        <button class="register-btn" onclick="redirectToLogin()">Register</button>
     </div>
+
+    <script>
+        function redirectToLogin() {
+    window.location.href = "{% url 'login' %}";  // Assuming 'login' is the correct URL name
+}
+
+    </script>
 
 </body>
 </html>

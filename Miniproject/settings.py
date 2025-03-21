@@ -13,6 +13,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 import environ
+from django.contrib.messages import constants as messages
+from cryptography.fernet import Fernet
+
+key = Fernet.generate_key()
+print(f"Your encryption key: {key.decode()}")
+
+ENCRYPTION_KEY = Fernet.generate_key().decode()  # Generate this key once & store safely
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -55,6 +64,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'error',
+    messages.SUCCESS: 'success',
+}
 
 ROOT_URLCONF = 'Miniproject.urls'
 
@@ -138,9 +152,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email configuration using environment variables
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"  
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "patil.heena19@gmail.com"  # Replace with your email
-EMAIL_HOST_PASSWORD = "Heena@123"  # Use an app password if needed
+EMAIL_HOST_USER = "patil.heena19@gmail.com"
+EMAIL_HOST_PASSWORD = "vepo ghjl epjm kekb"
+
 

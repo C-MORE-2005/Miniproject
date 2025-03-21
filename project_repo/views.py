@@ -1,12 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+import random
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password, check_password
-from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.urls import reverse
 from .models import Teacher, Student
@@ -17,7 +17,6 @@ verification_codes = {}
 
 
 # Login View
-
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -44,9 +43,8 @@ def login_view(request):
             if student and check_password(password, student.password):
                 request.session['user_id'] = student.id
                 request.session['user_type'] = 'student'
-                return redirect('student_dashboard')  # Change this if necessary
+                return redirect('student_dashboard')
 
-            # If neither exists
             messages.error(request, "Invalid email or password. Please try again.")
             return render(request, 'login.html', {'form': form})
 
@@ -54,6 +52,7 @@ def login_view(request):
         form = LoginForm()
 
     return render(request, 'login.html', {'form': form})
+
 
 # Choose Role View
 def choose_role(request):
@@ -66,13 +65,12 @@ def teacher_register(request):
         form = TeacherRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             teacher = form.save(commit=False)
-            teacher.password = make_password(form.cleaned_data['password'])  # ✅ Hash password
+            teacher.password = make_password(form.cleaned_data['password'])  # 🔹 Encrypt Password
             teacher.save()
             messages.success(request, "Registration successful! Please log in.")
-            return redirect("/login/")
+            return redirect("login")
         else:
             messages.error(request, "Registration failed. Please check the form.")
-
     else:
         form = TeacherRegistrationForm()
 
@@ -85,7 +83,7 @@ def register(request):
         form = StudentRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             student = form.save(commit=False)
-            student.password = make_password(form.cleaned_data['password'])  # ✅ Secure password
+            student.password = make_password(form.cleaned_data['password'])  # 🔹 Encrypt Password
             student.save()
             messages.success(request, "Registration successful! Please log in.")
             return redirect('login')
@@ -98,88 +96,116 @@ def register(request):
 
 
 # Forgot Password View
-def forgot_password_view(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        user = User.objects.filter(email=email).first()
+def forgot_password(request):
+    if request.method == "POST":
+        email = request.POST["email"]
 
-        if user:
-            # Generate password reset link
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            token = default_token_generator.make_token(user)
-            reset_link = request.build_absolute_uri(reverse('reset_password_confirm', kwargs={'uidb64': uid, 'token': token}))
+        # Check if email exists in Student or Teacher table
+        student = Student.objects.filter(email=email).first()
+        teacher = Teacher.objects.filter(email=email).first()
+
+        if student or teacher:
+            verification_code = str(random.randint(100000, 999999))  # Generate 6-digit code
+            verification_codes[email] = verification_code  # Store code with email
 
             # Send email
             send_mail(
-                'Password Reset Request',
-                f'Click the link below to reset your password:\n{reset_link}',
-                'your_email@gmail.com',  # Replace with your email
+                "Your Verification Code",
+                f"Your verification code is {verification_code}",
+                "patil.heena19@gmail.com",  # Replace with your email
                 [email],
                 fail_silently=False,
             )
 
-            messages.success(request, 'Password reset link sent to your email!')
-            return redirect('login')
+            messages.success(request, "Verification code sent! Please enter the code below.")
+            return redirect("verify_code")
+
         else:
-            messages.error(request, 'Email not found.')
+            messages.error(request, "Email not found!")
 
-    return render(request, 'forgot_password.html')
+    return render(request, "forgot_password.html")
 
 
-# Reset Password Confirmation View
+# Reset Password Confirmation Vie
 User = get_user_model()
+def reset_password_view(request, uidb64, token):
+    print("Reset Password View Called")  # Debugging
 
-def reset_password_confirm_view(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        print("Decoded UID:", uid)  # Debugging
+
+        # Try to find the user in the Student table first
         user = None
+        if Student.objects.filter(student_id=uid).exists():
+            user = Student.objects.get(student_id=uid)
+            print("User Found in Student:", user.username)  # Debugging
+        elif Teacher.objects.filter(teacher_id=uid).exists():
+            user = Teacher.objects.get(student_id=uid)
+            print("User Found in Teacher:", user.username)  # Debugging
+        else:
+            raise ValueError("User not found in Student or Teacher")
 
-    if user and default_token_generator.check_token(user, token):
-        if request.method == 'POST':
-            new_password = request.POST.get('new_password')
+    except (TypeError, ValueError, OverflowError, Student.DoesNotExist, Teacher.DoesNotExist):
+        messages.error(request, "Invalid or expired reset link.")
+        return redirect('forgot_password')
 
-            if len(new_password) < 6:  # Basic password validation
-                messages.error(request, "Password must be at least 6 characters.")
-                return render(request, 'reset_password.html')
+    # Check if the reset token is valid
+    if not default_token_generator.check_token(user, token):
+        messages.error(request, "Invalid or expired reset token.")
+        return redirect('forgot_password')
 
-            user.set_password(new_password)
-            user.save()
-            messages.success(request, "Your password has been reset successfully! Please log in.")
-            return redirect('login')
+    # If the form is submitted
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        print("New Password Entered:", new_password)  # Debugging
 
-        return render(request, 'reset_password.html')
+        if not new_password or len(new_password) < 6:
+            messages.error(request, "Password must be at least 6 characters.")
+            return render(request, 'reset_password.html', {'uidb64': uidb64, 'token': token})
 
-    messages.error(request, "Invalid or expired reset link.")
-    return redirect('forgot_password')
+        user.set_password(new_password)  # Set and hash the new password
+        user.save()
+        print("Password Updated for:", user.username)  # Debugging
+
+        messages.success(request, "Your password has been reset successfully! Please log in.")
+        return redirect('login')
+
+    return render(request, 'reset_password.html', {'uidb64': uidb64, 'token': token})
+
+
+# Verify Code View
+def verify_code(request):
+    if request.method == "POST":
+        entered_code = request.POST["verification_code"]
+        email = request.session.get("reset_email")  # Get email from session
+
+        if email and verification_codes.get(email) == entered_code:
+            request.session["verified_email"] = email  # Mark email as verified
+            messages.success(request, "Code verified! Please reset your password.")
+            return redirect("reset_password")
+        else:
+            messages.error(request, "Invalid verification code.")
+            return redirect("verify_code")
+
+    return render(request, "verify_code.html")
+
+
+# Student Dashboard
+def student_dashboard(request):
+    return render(request, 'student_dashboard.html')
+
+
+# Teacher Dashboard
+def teacher_dashboard(request):
+    return render(request, 'teacher_dashboard.html')
+
+
+# Idea Form View
+def idea_form(request):
+    return render(request, "idea_form.html")
 
 
 # Verify Email View
 def verify_email(request):
-    if request.method == "POST":
-        email = request.session.get("email")
-        entered_code = request.POST.get("verification_code")
-        
-        if email in verification_codes and verification_codes[email] == entered_code:
-            messages.success(request, "Email verified! You can reset your password.")
-            return redirect("reset_password")
-        else:
-            messages.error(request, "Invalid verification code!")
-    
-    return redirect("forgot_password")
-
-
-def reset_password_view(request):
-    return HttpResponse("Reset password page under construction.")
-
-
-
-def student_dashboard(request):
-    return render(request, 'student_dashboard.html')
-
-from django.shortcuts import render
-
-
-def idea_form(request):
-    return render(request, "idea_form.html")
+    return HttpResponse("Email verification page")

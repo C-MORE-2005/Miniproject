@@ -88,20 +88,20 @@
             for (let i = 1; i <= count; i++) {
                 let div = document.createElement("div");
                 div.classList.add("form-group");
-                div.innerHTML = `
+                div.innerHTML = 
                     <label>Team Member ${i} Name:</label>
                     <input type="text" name="team_member_${i}_name" required>
                     <label>Team Member ${i} Email:</label>
                     <input type="email" name="team_member_${i}_email" required>
-                `;
+                ;
                 container.appendChild(div);
 
                 let idDiv = document.createElement("div");
                 idDiv.classList.add("form-group");
-                idDiv.innerHTML = `
+                idDiv.innerHTML = 
                     <label>Upload ID Card for Team Member ${i} (JPG, PNG, PDF max 2MB)</label>
                     <input type="file" name="id_card_${i}" accept=".jpg, .png, .pdf" required>
-                `;
+                ;
                 idContainer.appendChild(idDiv);
             }
         }
