@@ -28,7 +28,7 @@
     }
 
     .logo-container img {
-      width: 400px; /* Adjust size */
+      width: 400px;
       height: auto;
     }
 
@@ -81,6 +81,16 @@
 
     .bottom-buttons a {
       text-decoration: none;
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .bottom-buttons a:hover {
+      background: #0056b3;
     }
 
     .error-message {
@@ -88,24 +98,55 @@
       font-size: 14px;
       margin-top: 5px;
     }
+
+    .captcha-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .captcha-container img {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      height: 40px;
+    }
+
+    .refresh-captcha {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
   <div class="main-container">
     
-    <!-- Logo Section -->
     <div class="logo-container">
       <img src="{% static 'images/logo.png' %}" alt="Company Logo">
     </div>
 
     <div class="title-container">Login</div>
+
+    <!-- Display error messages -->
+    {% if messages %}
+      <div>
+        {% for message in messages %}
+          <p class="error-message">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     <div class="info-container">
       <form method="post">
         {% csrf_token %}
         
         <div class="form-group">
-          <label>Email id of Team Leader / Founder</label>
-          {{ form.email }}
+          <label>Email ID of Team Leader / Founder</label>
+          <input type="email" name="email" value="{{ form.email.value|default_if_none:'' }}" required>
           {% if form.email.errors %}
             <p class="error-message">{{ form.email.errors.0 }}</p>
           {% endif %}
@@ -113,7 +154,7 @@
 
         <div class="form-group">
           <label>Enter Password</label>
-          {{ form.password }}
+          <input type="password" name="password" autocomplete="off" required>
           {% if form.password.errors %}
             <p class="error-message">{{ form.password.errors.0 }}</p>
           {% endif %}
@@ -121,34 +162,37 @@
 
         <div class="form-group">
           <label>Captcha</label>
-          {{ form.captcha }}
-          {% if form.captcha.errors %}
-            <p class="error-message">{{ form.captcha.errors.0 }}</p>
+          <div class="captcha-container">
+            <img id="captcha-image" src="{{ captcha_url }}" alt="CAPTCHA">
+            <button type="button" id="refresh-captcha" class="refresh-captcha">🔄</button>
+          </div>
+          <input type="text" name="captcha" placeholder="Enter Captcha" required autocomplete="off">
+          <input type="hidden" name="captcha_key" id="captcha-key" value="{{ captcha_key }}">
+          {% if captcha_error %}
+            <p class="error-message">{{ captcha_error }}</p>
           {% endif %}
         </div>
       
         <button type="submit" class="blue-button login-btn">Login</button>
         
         <div class="bottom-buttons">
-          <a href="{% url 'choose_role' %}">
-            <button type="button" class="blue-button">Register</button>
-          </a>
-          <a href="{% url 'forgot_password' %}">
-            <button type="button" class="blue-button">Forgot Password?</button>
-          </a>
+          <a href="{% url 'choose_role' %}">Register</a>
+          <a href="{% url 'forgot_password' %}">Forgot Password?</a>
         </div>
       </form>
     </div>
   </div>
   
-  {% if messages %}
-    {% for message in messages %}
-      {% if "Incorrect Captcha" in message %}
-      <script>
-          alert("Enter Correct Captcha");  
-      </script>
-      {% endif %}
-    {% endfor %}
-  {% endif %}
+  <script>
+  document.getElementById("refresh-captcha").addEventListener("click", function() {
+    fetch("{% url 'refresh_captcha' %}")  // Call the Django view
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("captcha-image").src = data.captcha_url;
+        document.getElementById("captcha-key").value = data.captcha_key;
+      })
+      .catch(error => alert("Error refreshing captcha. Please try again."));
+  });
+  </script>
 </body>
 </html>
