@@ -175,4 +175,14 @@ def refresh_captcha(request):
     return JsonResponse({'captcha_key': new_captcha, 'captcha_url': new_captcha_url})
 
 def captcha_image(request):
-    return HttpResponse(f"Captcha: {request.session.get('captcha_value', '0000')}")  # Display captcha
+    text = generate_captcha_text()
+    request.session["captcha"] = text
+
+    img = Image.new("RGB", (150, 50), color=(255, 255, 255))
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.load_default()
+    draw.text((10, 10), text, fill=(0, 0, 0), font=font)
+
+    buffer = io.BytesIO()
+    img.save(buffer, format="PNG")
+    return HttpResponse(buffer.getvalue(), content_type="image/png")
