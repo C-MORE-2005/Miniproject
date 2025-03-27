@@ -15,7 +15,7 @@
             margin: 0;
         }
         .container {
-            width: 400px; /* Adjusted for better alignment */
+            width: 400px;
             background: white;
             padding: 20px;
             border-radius: 8px;
@@ -25,10 +25,11 @@
             background: darkred;
             color: white;
             text-align: center;
-            padding: 10px;
+            padding: 15px;
             font-size: 18px;
             font-weight: bold;
             border-radius: 5px 5px 0 0;
+            margin-bottom: 20px;
         }
         .form-group {
             display: flex;
@@ -39,38 +40,48 @@
             font-size: 14px;
             font-weight: bold;
             margin-bottom: 5px;
+            color: black;
         }
         input, select {
-            width: 100%; /* Full width input */
+            width: 100%;
+            height: 45px;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 14px;
+            box-sizing: border-box;
+        }
+        .file-input {
+            height: 45px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: white;
         }
         .radio-group {
             display: flex;
             gap: 10px;
             align-items: center;
+            margin-top: -5px;
         }
         .radio-group label {
             display: flex;
             align-items: center;
-            gap: 3px; /* Reduced space between radio button and text */
-        }
-        .file-input {
-            border: none;
-            padding: 0;
+            gap: 3px;
         }
         .register-btn {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             margin-top: 15px;
             background: blue;
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
+            height: 40px;
         }
         .register-btn:hover {
             background: darkblue;
@@ -78,82 +89,86 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <div class="header">Teacher Registration</div>
-
-        <div class="form-group">
-            <label>Institute*</label>
-            <input type="text" placeholder="Enter Institute">
-        </div>
-
-        <div class="form-group">
-            <label>Name*</label>
-            <input type="text" placeholder="Enter Name">
-        </div>
-
-        <div class="form-group">
-            <label>Email ID*</label>
-            <input type="email" placeholder="Enter Email">
-        </div>
-
-        <div class="form-group">
-            <label>Mobile Number*</label>
-            <input type="text" placeholder="Enter Mobile Number">
-        </div>
-
-        <div class="form-group">
-            <label>Gender*</label>
-            <div class="radio-group">
-                <label><input type="radio" name="gender" value="Male"> Male</label>
-                <label><input type="radio" name="gender" value="Female"> Female</label>
-                <label><input type="radio" name="gender" value="Other"> Other</label>
+        <form method="post" action="{% url 'teacher_register' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Institute*</label>
+                <select name="institute" required>
+                    <option value="" disabled selected hidden>Select Institute</option>
+                    <option value="SIES Graduate School of Technology">SIES Graduate School of Technology</option>
+                </select>
             </div>
-        </div>
-
-        <div class="form-group">
-            <label>Branch*</label>
-            <select>
-                <option value="">Select Your Branch</option>
-                <option value="AIDS">Artificial Intelligence & Data Science</option>
-                <option value="AIML">Artificial Intelligence & Machine Learning</option>
-                <option value="Civil">Civil Engineering</option>
-                <option value="Computer">Computer Engineering</option>
-                <option value="IOT">Internet of Things</option>
-                <option value="IT">Information Technology</option>
-                <option value="Mechanical">Mechanical Engineering</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Teacher ID*</label>
-            <input type="text" placeholder="Enter Teacher ID">
-        </div>
-
-        <div class="form-group">
-            <label>Upload ID Card*</label>
-            <input type="file" class="file-input">
-        </div>
-
-        <div class="form-group">
-            <label>Enter Password*</label>
-            <input type="password" placeholder="Enter Password">
-        </div>
-
-        <div class="form-group">
-            <label>Re-enter Password*</label>
-            <input type="password" placeholder="Re-enter Password">
-        </div>
-
-        <button class="register-btn" onclick="redirectToLogin()">Register</button>
+            <div class="form-group">
+                <label>Name*</label>
+                <input type="text" name="name" placeholder="Enter Name" required>
+            </div>
+            <div class="form-group">
+                <label>Email ID*</label>
+                <input type="email" name="email" placeholder="Enter Email" required>
+            </div>
+            <div class="form-group">
+                <label>Mobile Number*</label>
+                <input type="text" name="mobile" placeholder="Enter Mobile Number" required pattern="\d{10}" 
+                    title="Mobile number must be exactly 10 digits" maxlength="10">
+                <small id="mobile-error" style="color: red; display: none;">Mobile number must be exactly 10 digits</small>
+            </div>
+            <div class="form-group">
+                <label>Gender*</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gender" value="Male" required> Male</label>
+                    <label><input type="radio" name="gender" value="Female"> Female</label>
+                    <label><input type="radio" name="gender" value="Other"> Other</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Branch*</label>
+                <select name="branch" required>
+                    <option value="" disabled selected>Select Your Branch</option>
+                    <option value="AIDS">Artificial Intelligence & Data Science</option>
+                    <option value="AIML">Artificial Intelligence & Machine Learning</option>
+                    <option value="Civil">Civil Engineering</option>
+                    <option value="Computer">Computer Engineering</option>
+                    <option value="IOT">Internet of Things</option>
+                    <option value="IT">Information Technology</option>
+                    <option value="Mechanical">Mechanical Engineering</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Teacher ID*</label>
+                <input type="text" name="teacher_id" placeholder="Enter Teacher ID" required>
+            </div>
+            <div class="form-group">
+                <label>Upload ID Card*</label>
+                <input type="file" name="id_card" class="file-input" accept=".jpg,.jpeg,.png" required>
+            </div>
+            <div class="form-group">
+                <label>Enter Password*</label>
+                <input type="password" name="password" placeholder="Enter Password" required minlength="8"
+                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+                    title="Must contain at least one uppercase, one lowercase, one number, and one special character">
+            </div>
+            <div class="form-group">
+                <label>Re-enter Password*</label>
+                <input type="password" name="confirm_password" placeholder="Re-enter Password" required>
+                <small id="password-error" style="color: red; display: none;">Passwords do not match</small>
+            </div>
+            <button class="register-btn" type="submit">Register</button>
+        </form>
     </div>
-
     <script>
-        function redirectToLogin() {
-    window.location.href = "{% url 'login' %}";  // Assuming 'login' is the correct URL name
-}
-
+        document.querySelector("form").addEventListener("submit", function(event) {
+            var password = document.querySelector("input[name='password']").value;
+            var confirmPassword = document.querySelector("input[name='confirm_password']").value;
+            var passwordError = document.getElementById("password-error");
+            if (password !== confirmPassword) {
+                passwordError.style.display = "block";
+                event.preventDefault();
+            } else {
+                passwordError.style.display = "none";
+            }
+        });
     </script>
-
 </body>
 </html>
