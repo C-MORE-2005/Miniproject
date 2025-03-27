@@ -6,11 +6,17 @@
     <title>Team Leader / Founder Registration</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        /* Make labels darker and increase font weight */
-        label {
-            font-weight: bold;
-            color: #333;
-        }
+        /* Ensure labels are always visible */
+        /* Ensure labels are always visible */
+label {
+    font-weight: bold;
+    color: black !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-bottom: 5px;
+}
+
 
         /* Make * symbol red */
         label span {
@@ -18,11 +24,17 @@
             font-size: 18px;
         }
 
+        /* Fix form spacing */
+        .form-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
         /* Align gender section properly */
         .gender-group {
             display: flex;
             align-items: center;
-            gap: 15px; /* Space between items */
+            gap: 15px;
         }
 
         .gender-label {
@@ -31,17 +43,57 @@
             margin-right: 10px;
         }
 
-        .gender-group input {
-            transform: scale(1.3); /* Increase size of radio button */
-            margin-right: 5px;
+        /* Fix radio buttons */
+        .gender-group input[type="radio"] {
+            appearance: auto;
+            -webkit-appearance: radio;
+            -moz-appearance: radio;
+            width: 16px;
+            height: 16px;
+            margin: 0 5px 0 0;
+            cursor: pointer;
         }
 
-        /* Improve dropdown spacing */
-        select {
+        /* Standardize input field sizes */
+        .form-group input,
+        .form-group select {
             width: 100%;
-            height: 40px;
+            height: 45px !important;
             font-size: 16px;
-            padding: 5px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            appearance: none;
+        }
+
+        /* Title styling */
+        .title-container {
+            background: darkred;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px 5px 0 0;
+        }
+
+        /* Register button styling */
+        .blue-button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            height: 40px;
+        }
+
+        .blue-button:hover {
+            background: darkblue;
         }
     </style>
 </head>
@@ -55,29 +107,34 @@
             <form method="post" action="{% url 'register' %}" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                <div class="form-group">
-                    <label>Institute<span>*</span></label>
-                    <input type="text" name="institute" required>
+                <div class="form-group" id="institute-group">
+                    <label for="institute-select">Institute<span>*</span></label>
+                    <select name="institute" id="institute-select" required>
+                        <option value="" disabled selected hidden>Select Institute</option>
+                        <option value="SIES Graduate School of Technology">SIES Graduate School of Technology</option>
+                    </select>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Name<span>*</span></label>
-                    <input type="text" name="name" required>
+                    <label for="name">Name<span>*</span></label>
+                    <input type="text" id="name" name="name" required>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Email Id<span>*</span></label>
-                    <input type="email" name="email" required>
+                    <label for="email">Email Id<span>*</span></label>
+                    <input type="email" id="email" name="email" required>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Mobile Number<span>*</span></label>
-                    <input type="text" name="mobile" required>
+                    <label for="mobile">Mobile Number<span>*</span></label>
+                    <input type="text" id="mobile" name="mobile" required pattern="\d{10}" 
+                     title="Mobile number must be exactly 10 digits" maxlength="10">
+                    <small id="mobile-error" style="color: red; display: none;">Mobile number must be exactly 10 digits</small>
                 </div>
-                
+
                 <div class="form-group">
+                    <label class="gender-label">Gender<span>*</span></label>
                     <div class="gender-group">
-                        <label class="gender-label">Gender<span>*</span></label>
                         <input type="radio" id="male" name="gender" value="Male" required>
                         <label for="male">Male</label>
 
@@ -88,10 +145,10 @@
                         <label for="other">Other</label>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Branch<span>*</span></label>
-                    <select name="branch" required>
+                    <label for="branch">Branch<span>*</span></label>
+                    <select name="branch" id="branch" required>
                         <option value="" disabled selected>Select your branch</option>
                         <option value="Artificial Intelligence & Data Science (AIDS)">Artificial Intelligence & Data Science (AIDS)</option>
                         <option value="Artificial Intelligence & Machine Learning (AIML)">Artificial Intelligence & Machine Learning (AIML)</option>
@@ -102,50 +159,34 @@
                         <option value="Mechanical Engineering">Mechanical Engineering</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Student ID/PRN Number</label>
-                    <input type="text" name="student_id">
+                    <label for="student_id">Student ID/PRN Number</label>
+                    <input type="text" id="student_id" name="student_id">
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Upload Student/Employee ID (Max 2MB JPG, PNG)</label>
-                    <input type="file" name="student_id_file" accept=".jpg,.jpeg,.png">
+                    <label for="student_id_file">Upload Student/Employee ID (Max 2MB JPG, PNG)</label>
+                    <input type="file" id="student_id_file" name="student_id_file" accept=".jpg,.jpeg,.png">
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Enter Password<span>*</span></label>
+                    <label for="password">Enter Password<span>*</span></label>
                     <input type="password" id="password" name="password" required minlength="8"
                         pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
                         title="Must contain at least one uppercase, one lowercase, one number, and one special character">
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Re-enter Password<span>*</span></label>
+                    <label for="confirm_password">Re-enter Password<span>*</span></label>
                     <input type="password" id="confirm_password" name="confirm_password" required>
                     <small id="password-error" style="color: red; display: none;">Passwords do not match</small>
                 </div>
-                
+
                 <!-- Register Button -->
                 <button class="blue-button" type="submit">Register</button>
             </form>
         </div>
     </div>
-
-    <script>
-        // Password validation script
-        document.getElementById("confirm_password").addEventListener("input", function() {
-            let password = document.getElementById("password").value;
-            let confirmPassword = this.value;
-            let errorText = document.getElementById("password-error");
-            
-            if (password !== confirmPassword) {
-                errorText.style.display = "block";
-            } else {
-                errorText.style.display = "none";
-            }
-        });
-    </script>
-
 </body>
 </html>
