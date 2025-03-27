@@ -11,6 +11,7 @@ from django.utils.encoding import force_bytes
 from django.urls import reverse
 from captcha.models import CaptchaStore
 from django.contrib.auth import authenticate, login
+from django.utils.http import urlsafe_base64_decode
 from captcha.helpers import captcha_image_url
 from .models import Teacher, Student
 from .forms import LoginForm, TeacherRegistrationForm, StudentRegistrationForm
@@ -96,33 +97,44 @@ def forgot_password(request):
     return render(request, "forgot_password.html")
 
 # Reset Password Confirmation View
-User = get_user_model()
 def reset_password_view(request, uidb64, token):
     try:
+        # Decode the UID and retrieve the user email
         uid = urlsafe_base64_decode(uidb64).decode()
-        student = Student.objects.filter(id=uid).first()
-        teacher = Teacher.objects.filter(id=uid).first()
+        
+        # Try to find the user in both tables based on email
+        student = Student.objects.filter(email=uid).first()
+        teacher = Teacher.objects.filter(email=uid).first()
         user = student if student else teacher
 
+        # Validate user and token
         if not user or not default_token_generator.check_token(user, token):
             messages.error(request, "Invalid or expired reset link.")
             return redirect('forgot_password')
 
-    except Exception:
-        messages.error(request, "Invalid or expired reset link.")
+    except Exception as e:
+        messages.error(request, "Something went wrong. Please try again.")
+        print("Error:", e)  # Debugging
         return redirect('forgot_password')
 
     if request.method == 'POST':
         new_password = request.POST.get('new_password')
-        if len(new_password) < 6:
-            messages.error(request, "Password must be at least 6 characters.")
+        confirm_password = request.POST.get('confirm_password')
+
+        if not new_password or not confirm_password:
+            messages.error(request, "Both password fields are required.")
+        elif new_password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+        elif len(new_password) < 6:
+            messages.error(request, "Password must be at least 6 characters long.")
         else:
-            user.password = make_password(new_password)  # Hash new password
+            # Update the password securely
+            user.password = make_password(new_password)
             user.save()
-            request.session.flush()  # Clear session for security
+
             messages.success(request, "Your password has been reset successfully! Please log in.")
             return redirect('login')
-    
+
     return render(request, 'reset_password.html', {'uidb64': uidb64, 'token': token})
 
 # Verify Code View

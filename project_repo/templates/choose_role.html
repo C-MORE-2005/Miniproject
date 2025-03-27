@@ -6,54 +6,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Choose Role</title>
     <style>
+        /* Background gradient */
         body {
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
-            background-color: #f8f8f8;
+            background: linear-gradient(to right, #7ee8fa, #80ff72); 
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
+
+        /* Centered card */
         .role-container {
-            text-align: center;
             background-color: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 500px;
         }
+
+        /* Red title bar */
         .role-title {
             background-color: red;
             color: white;
-            font-size: 32px; /* Increased text size */
+            font-size: 26px;
             font-weight: bold;
-            padding: 15px 0;
+            padding: 15px;
             border-radius: 5px;
-            width: 550px; /* Increased width */
-            margin-bottom: 25px; /* Added more space below the title */
+            margin-bottom: 20px;
         }
+
+        /* Role selection layout */
         .role-selection {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            gap: 20px; /* Added spacing between images */
+            gap: 25px; 
         }
-        .role-option {
-            text-align: center;
-            width: 50%;
-        }
+
+        /* Role images */
         .role-option img {
-            width: 260px; /* Slightly bigger images */
-            height: 260px;
+            width: 120px; 
+            height: 120px;
             cursor: pointer;
             transition: transform 0.3s;
         }
+
         .role-option img:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
+
+        /* Role labels */
         .role-text {
-            font-size: 26px; /* Increased text size */
+            font-size: 20px;
             font-weight: bold;
-            margin-top: 20px; /* More space between image and text */
+            margin-top: 10px;
+        }
+
+        /* Login-style button */
+        .role-button {
+            background-color: #d9534f; 
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .role-button:hover {
+            background-color: #c9302c;
         }
     </style>
 </head>
@@ -64,8 +91,7 @@
         <div class="role-selection">
             <!-- Professor -->
             <div class="role-option">
-                <a href="{% url 'teacher_register'%}">
-
+                <a href="{% url 'teacher_register' %}">
                     <img src="{% static 'images/teacher.png' %}" alt="Professor">
                 </a>
                 <div class="role-text">Professor</div>
@@ -73,13 +99,15 @@
 
             <!-- Student -->
             <div class="role-option">
-                <a href="{% url 'register' %}">                    <!-- Ensure this matches the URL name in urls.py -->
-                    <img src="{% static 'images/stud.png' %}" alt="Student" class="role-image">
+                <a href="{% url 'register' %}">
+                    <img src="{% static 'images/stud.png' %}" alt="Student">
                 </a>
-                
                 <div class="role-text">Student</div>
             </div>
         </div>
+
+        <!-- Login-style button -->
+        <button class="role-button">Continue</button>
     </div>
 </body>
 </html>
