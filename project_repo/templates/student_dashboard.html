@@ -6,71 +6,167 @@
     <title>Student Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        body {
-            background: linear-gradient(to bottom, #FFA500, #FFFFFF); /* Orange to white gradient */
-            text-align: center;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #FFA500, #FFFFFF);
+            text-align: center;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
+
+        /* Navbar Styling */
+        .navbar {
+            width: 100%;
+            background: #AAC0F9;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar-logo img {
+            height: 50px;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .navbar-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            font-weight: bold;
+        }
+
+        .navbar-menu a:hover, .dropdown:hover .dropdown-content a:hover {
+            background: #ff9800;
+            border-radius: 5px;
+        }
+
+        /* Dropdown Styling */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            border-radius: 5px;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 10px;
+            display: block;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
         .container {
-            margin-top: 20px;
+            margin-top: 120px;
         }
-        .logo {
-            width: 450px;
-            height: auto;
-            margin-bottom: 15px;
-        }
+
         h1 {
             font-size: 36px;
             font-weight: bold;
             color: #222;
+            margin-top: 20px;
         }
+
+        /* Buttons Section */
         .button-container {
             display: flex;
             justify-content: center;
-            gap: 60px;
+            gap: 40px;
             flex-wrap: wrap;
             margin-top: 20px;
         }
+
         .button-item {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .image-button {
-            width: 260px;
-            height: 260px;
-            border-radius: 20px;
+            width: 400px;
+            height: 400px;
+            border-radius: 15px;
             border: none;
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
         }
+
         .image-button:hover {
             transform: scale(1.1);
             box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
         }
+
         .button-title {
-            margin-top: 12px;
-            font-size: 22px;
+            margin-top: 10px;
+            font-size: 20px;
             font-weight: bold;
             color: #333;
         }
     </style>
 </head>
 <body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-logo">
+            <img src="{% static 'images/logo.png' %}" alt="SIES Logo">
+        </div>
+        <div class="navbar-menu">
+            <a href="#">View Your Project</a>
+            <div class="dropdown">
+                <a href="#">Add Project ▾</a>
+                <div class="dropdown-content">
+                    <a href="{% url 'idea_form' %}">Idea</a>
+                    <a href="{% url 'prototype_form' %}">Prototype</a>
+                    <a href="{% url 'start_up' %}">Startup</a>
+                </div>
+            </div>
+            <a href="#">View Profile</a>
+            
+            <a href="{% url 'login' %}" style="margin-right: 20px;">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <div class="container">
-        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
         <h1>Welcome, Student!</h1>
         <div class="button-container">
             <div class="button-item">
                 <a href="{% url 'idea_form' %}">
                     <img src="{% static 'images/idea.jpeg' %}" alt="Submit an Idea" class="image-button">
-                </a>           
+                </a>
                 <div class="button-title">IDEA</div>
             </div>
             <div class="button-item">
@@ -87,5 +183,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>
